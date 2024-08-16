@@ -7,6 +7,8 @@ class Knight
         @queue=[]
         @get_x=nil
         @get_y=nil
+        @parent_array=[]
+        @all_moves=[]
     end
 
     def print_board
@@ -27,7 +29,7 @@ class Knight
     def get_shortest_path
         @queue<<[@get_x,@get_y,0]
         @board[@get_x][@get_y]=1
-
+        switch=false
         while @queue
             current_array=@queue.shift
 
@@ -37,7 +39,8 @@ class Knight
 
             if cur_x==7 && cur_y==7
                 puts "Ai gasit pozitia in #{distance} miscari"
-                return 1
+                puts "Calea este:#{@parent_array}"
+                switch=true
                 break
             end
 
@@ -48,14 +51,21 @@ class Knight
                 if  knight_x.between?(0,7) && knight_y.between?(0,7) && @board[knight_x][knight_y]==0
                     @board[knight_x][knight_y]=1
                     @queue<<[knight_x,knight_y,distance+1]
+                    @all_moves<<[knight_x,knight_y]
                 else
                     next
                 end
             end
 
-            p @queue
+            if switch
+                break
+            end
+
         end
 
+        
+        p @all_moves
+        print_board
     end
-
+    
 end
