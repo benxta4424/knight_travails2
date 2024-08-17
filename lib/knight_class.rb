@@ -7,8 +7,8 @@ class Knight
         @queue=[]
         @get_x=nil
         @get_y=nil
-        @parent_array=[]
-        @all_moves=[]
+        @hash=Hash.new{ |hash,key| hash[key]=[] }
+        @depth=nil
     end
 
     def print_board
@@ -26,35 +26,50 @@ class Knight
         @get_y=gets.chomp.to_i
     end
 
+    def create_hash(value,x,y)
+        @hash[value]<<[x,y]
+    end
+
     def get_shortest_path
+        
+        depth=0
+
         @queue<<[@get_x,@get_y,0]
         @board[@get_x][@get_y]=1
+
+        create_hash(depth,@get_x,@get_y)
+
         switch=false
-        while @queue
-            current_array=@queue.shift
 
-            cur_x=current_array[0]
-            cur_y=current_array[1]
-            distance=current_array[2]
+        while !@queue.empty?
 
-            if cur_x==7 && cur_y==7
-                puts "Ai gasit pozitia in #{distance} miscari"
-                puts "Calea este:#{@parent_array}"
-                switch=true
-                break
-            end
+            depth+=1
 
-            KNIGHT_MOVES.each do |moves|
-                knight_x=moves[0]+cur_x
-                knight_y=moves[1]+cur_y
+            current_depth=@queue.size
 
-                if  knight_x.between?(0,7) && knight_y.between?(0,7) && @board[knight_x][knight_y]==0
-                    @board[knight_x][knight_y]=1
-                    @queue<<[knight_x,knight_y,distance+1]
-                    @all_moves<<[knight_x,knight_y]
-                else
-                    next
+            current_depth.times do
+
+                cur_x,cur_y,cur_dist=@queue.shift
+
+                KNIGHT_MOVES.each do |moves|
+                    knight_x=moves[0]+cur_x
+                    knight_y=moves[1]+cur_y
+
+                    if knight_x.between?(0,7) && knight_y.between?(0,7) && @board[knight_x][knight_y]==0
+                        @hash[depth]<<[knight_x,knight_y]
+                        @board[knight_x][knight_y]=1
+                        @queue<<[knight_x,knight_y]
+                    else
+                        next
+                    end
+
+                    if knight_x==7 && knight_y==7
+                        switch=true
+                        break
+                    end
+
                 end
+
             end
 
             if switch
@@ -62,10 +77,22 @@ class Knight
             end
 
         end
+        @depth=depth
+    end
 
-        
-        p @all_moves
-        print_board
+    def distance_to_target
+        @depth
+    end
+
+    def print_by_depth
+        @hash.each_key do |key|
+            print "depth #{key}: "
+            print @hash[key]
+            puts
+            puts
+            puts
+
+        end
     end
     
 end
