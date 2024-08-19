@@ -9,6 +9,7 @@ class Knight
         @get_y=nil
         @hash=Hash.new{ |hash,key| hash[key]=[] }
         @depth=nil
+        @path=[]
     end
 
     def print_board
@@ -85,6 +86,7 @@ class Knight
     end
 
     def print_by_depth
+        
         @hash.each_key do |key|
             print "depth #{key}: "
             print @hash[key]
@@ -93,6 +95,48 @@ class Knight
             puts
 
         end
+
+    end
+
+
+    def backtrack
+
+        size=@hash.size-1
+        cur_x=0
+        cur_y=0
+
+        while size>0
+            
+
+            @hash[size].each do |sets|
+                cur_x,cur_y=sets
+                
+                KNIGHT_MOVES.each do |items|
+                    
+                    switch=false
+                    knight_x=cur_x+items[0]
+                    knight_y=cur_y+items[1]
+
+                    puts knight_x,knight_y
+
+                    if @hash[size-1].include?([knight_x,knight_y])
+                        @path<<[knight_x,knight_y]
+                        switch=true
+                        break
+                    end
+                end
+
+                if switch    
+                    break
+                end
+            end
+            size-=1
+        end
+
+    end
+
+    def pathh
+        p @path.reverse
     end
     
 end
