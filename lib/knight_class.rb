@@ -101,24 +101,26 @@ class Knight
 
     def backtrack
 
-        size=@hash.size-1
-        cur_x=0
-        cur_y=0
+        size=@depth
+        cur_x=7
+        cur_y=7
+        @path<<[cur_x,cur_y]
 
         while size>0
-            
+
+            switch=false
 
             @hash[size].each do |sets|
                 cur_x,cur_y=sets
-                
+                                
                 KNIGHT_MOVES.each do |items|
                     
-                    switch=false
-                    knight_x=cur_x+items[0]
-                    knight_y=cur_y+items[1]
+                    
+                    knight_x=cur_x-items[0]
+                    knight_y=cur_y-items[1]
 
                     puts knight_x,knight_y
-
+                    
                     if @hash[size-1].include?([knight_x,knight_y])
                         @path<<[knight_x,knight_y]
                         switch=true
@@ -126,9 +128,7 @@ class Knight
                     end
                 end
 
-                if switch    
-                    break
-                end
+                break if switch
             end
             size-=1
         end
