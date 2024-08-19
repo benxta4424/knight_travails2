@@ -1,6 +1,6 @@
-require './lib/knight_class'
+require "./lib/knight_class"
 
-test=Knight.new
+test = Knight.new
 
 test.get_values
 
